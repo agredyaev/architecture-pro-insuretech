@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: scaletestapp
+  labels:
+    app: scaletestapp
+    app.kubernetes.io/name: scaletestapp
+    app.kubernetes.io/part-of: insuretech
+    app.kubernetes.io/component: api
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: scaletestapp
+                port:
+                  number: 8080

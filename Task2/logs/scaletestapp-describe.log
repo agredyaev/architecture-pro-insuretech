@@ -1,0 +1,150 @@
+Name:             scaletestapp-65c6bc858-qmqcq
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             task2/192.168.58.2
+Start Time:       Sat, 31 Jan 2026 13:50:08 +0100
+Labels:           app=scaletestapp
+                  app.kubernetes.io/component=api
+                  app.kubernetes.io/name=scaletestapp
+                  app.kubernetes.io/part-of=insuretech
+                  pod-template-hash=65c6bc858
+Annotations:      prometheus.io/path: /metrics
+                  prometheus.io/port: 8080
+                  prometheus.io/scrape: true
+Status:           Running
+SeccompProfile:   RuntimeDefault
+IP:               10.244.0.21
+IPs:
+  IP:           10.244.0.21
+Controlled By:  ReplicaSet/scaletestapp-65c6bc858
+Containers:
+  scaletestapp:
+    Container ID:   docker://71760bad358d4364189f157f1304a16f9d315c437bd3b91152b92f38e194cf28
+    Image:          ghcr.io/yandex-practicum/scaletestapp:latest
+    Image ID:       docker://sha256:fdd68d1d1d533815cbccaa681cbbbecd8179f6bf0351dd8ab87461423764f5c1
+    Port:           8080/TCP (http)
+    Host Port:      0/TCP (http)
+    State:          Running
+      Started:      Sat, 31 Jan 2026 13:50:08 +0100
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     200m
+      memory:  30Mi
+    Requests:
+      cpu:        50m
+      memory:     15Mi
+    Liveness:     http-get http://:http/ delay=15s timeout=2s period=10s #success=1 #failure=3
+    Readiness:    http-get http://:http/ delay=5s timeout=2s period=5s #success=1 #failure=3
+    Startup:      http-get http://:http/ delay=0s timeout=1s period=5s #success=1 #failure=12
+    Environment:  <none>
+    Mounts:
+      /tmp from tmp (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-bx55f (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  tmp:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  kube-api-access-bx55f:
+    Type:                     Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:   3607
+    ConfigMapName:            kube-root-ca.crt
+    Optional:                 false
+    DownwardAPI:              true
+QoS Class:                    Burstable
+Node-Selectors:               <none>
+Tolerations:                  node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                              node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Topology Spread Constraints:  kubernetes.io/hostname:ScheduleAnyway when max skew 1 is exceeded for selector app=scaletestapp
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  2m8s  default-scheduler  Successfully assigned default/scaletestapp-65c6bc858-qmqcq to task2
+  Normal  Pulled     2m8s  kubelet            spec.containers{scaletestapp}: Container image "ghcr.io/yandex-practicum/scaletestapp:latest" already present on machine
+  Normal  Created    2m8s  kubelet            spec.containers{scaletestapp}: Created container: scaletestapp
+  Normal  Started    2m8s  kubelet            spec.containers{scaletestapp}: Started container scaletestapp
+
+
+Name:             scaletestapp-65c6bc858-tl2hf
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             task2/192.168.58.2
+Start Time:       Sat, 31 Jan 2026 13:40:26 +0100
+Labels:           app=scaletestapp
+                  app.kubernetes.io/component=api
+                  app.kubernetes.io/name=scaletestapp
+                  app.kubernetes.io/part-of=insuretech
+                  pod-template-hash=65c6bc858
+Annotations:      prometheus.io/path: /metrics
+                  prometheus.io/port: 8080
+                  prometheus.io/scrape: true
+Status:           Running
+SeccompProfile:   RuntimeDefault
+IP:               10.244.0.17
+IPs:
+  IP:           10.244.0.17
+Controlled By:  ReplicaSet/scaletestapp-65c6bc858
+Containers:
+  scaletestapp:
+    Container ID:   docker://7a19d3b66fabf7bf2a836a5240bccf82aea215c8f812881fab4909eea57b1e00
+    Image:          ghcr.io/yandex-practicum/scaletestapp:latest
+    Image ID:       docker://sha256:fdd68d1d1d533815cbccaa681cbbbecd8179f6bf0351dd8ab87461423764f5c1
+    Port:           8080/TCP (http)
+    Host Port:      0/TCP (http)
+    State:          Running
+      Started:      Sat, 31 Jan 2026 13:40:27 +0100
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     200m
+      memory:  30Mi
+    Requests:
+      cpu:        50m
+      memory:     15Mi
+    Liveness:     http-get http://:http/ delay=15s timeout=2s period=10s #success=1 #failure=3
+    Readiness:    http-get http://:http/ delay=5s timeout=2s period=5s #success=1 #failure=3
+    Startup:      http-get http://:http/ delay=0s timeout=1s period=5s #success=1 #failure=12
+    Environment:  <none>
+    Mounts:
+      /tmp from tmp (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-vm9g8 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  tmp:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  kube-api-access-vm9g8:
+    Type:                     Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:   3607
+    ConfigMapName:            kube-root-ca.crt
+    Optional:                 false
+    DownwardAPI:              true
+QoS Class:                    Burstable
+Node-Selectors:               <none>
+Tolerations:                  node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                              node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Topology Spread Constraints:  kubernetes.io/hostname:ScheduleAnyway when max skew 1 is exceeded for selector app=scaletestapp
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  11m   default-scheduler  Successfully assigned default/scaletestapp-65c6bc858-tl2hf to task2
+  Normal  Pulled     11m   kubelet            spec.containers{scaletestapp}: Container image "ghcr.io/yandex-practicum/scaletestapp:latest" already present on machine
+  Normal  Created    11m   kubelet            spec.containers{scaletestapp}: Created container: scaletestapp
+  Normal  Started    11m   kubelet            spec.containers{scaletestapp}: Started container scaletestapp

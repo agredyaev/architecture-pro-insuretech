@@ -1,0 +1,241 @@
+Sat Jan 31 13:49:13 CET 2026
+NAME               REFERENCE                 TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   <unknown>/20   1         10        0          5s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          8m47s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:49:18 CET 2026
+NAME               REFERENCE                 TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   <unknown>/20   1         10        0          10s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          8m52s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:49:23 CET 2026
+NAME               REFERENCE                 TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   300m/20   1         10        1          15s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          8m57s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:49:28 CET 2026
+NAME               REFERENCE                 TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   300m/20   1         10        1          20s
+NAME                           READY   STATUS    RESTARTS   AGE    IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          9m2s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:49:33 CET 2026
+NAME               REFERENCE                 TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   300m/20   1         10        1          25s
+NAME                           READY   STATUS    RESTARTS   AGE    IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          9m7s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:49:38 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   20167m/20   1         10        1          30s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          9m12s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:49:43 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   20167m/20   1         10        1          35s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          9m17s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:49:48 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   20167m/20   1         10        1          40s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          9m23s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:49:54 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   20167m/20   1         10        1          46s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          9m28s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:49:59 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   20167m/20   1         10        1          51s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          9m33s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:50:04 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   20167m/20   1         10        1          56s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          9m38s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:50:09 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   32932m/20   1         10        1          61s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   0/1     Running   0          1s      10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          9m43s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:50:14 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   32932m/20   1         10        1          66s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          6s      10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          9m48s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:50:19 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   32932m/20   1         10        1          71s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          11s     10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          9m53s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:50:24 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   32932m/20   1         10        2          76s
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          16s     10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          9m58s   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:50:29 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   32932m/20   1         10        2          81s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          21s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          10m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:50:34 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   32932m/20   1         10        2          86s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          26s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          10m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:50:39 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   33734m/20   1         10        2          92s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          32s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          10m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:50:45 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   33734m/20   1         10        2          97s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          37s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          10m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:50:50 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   33734m/20   1         10        2          102s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          42s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          10m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:50:55 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   16967m/20   1         10        2          107s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          47s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          10m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:51:00 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   16967m/20   1         10        2          112s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          52s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          10m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:51:05 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   16967m/20   1         10        2          117s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          57s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          10m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:51:10 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   17003m/20   1         10        2          2m2s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          62s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          10m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:51:15 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   17003m/20   1         10        2          2m7s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          67s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          10m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:51:20 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   17003m/20   1         10        2          2m12s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          72s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          10m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:51:25 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   17015m/20   1         10        2          2m17s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          77s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          10m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:51:30 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   17015m/20   1         10        2          2m23s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          83s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          11m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:51:36 CET 2026
+NAME               REFERENCE                 TARGETS     MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   17015m/20   1         10        2          2m28s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          88s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          11m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:51:41 CET 2026
+NAME               REFERENCE                 TARGETS    MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   6782m/20   1         10        2          2m33s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          93s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          11m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:51:46 CET 2026
+NAME               REFERENCE                 TARGETS    MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   6782m/20   1         10        2          2m38s
+NAME                           READY   STATUS    RESTARTS   AGE   IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          98s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          11m   10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:51:51 CET 2026
+NAME               REFERENCE                 TARGETS    MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   6782m/20   1         10        2          2m43s
+NAME                           READY   STATUS    RESTARTS   AGE    IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          103s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          11m    10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:51:56 CET 2026
+NAME               REFERENCE                 TARGETS    MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   6783m/20   1         10        2          2m48s
+NAME                           READY   STATUS    RESTARTS   AGE    IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          108s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          11m    10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:52:01 CET 2026
+NAME               REFERENCE                 TARGETS    MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   6783m/20   1         10        2          2m53s
+NAME                           READY   STATUS    RESTARTS   AGE    IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          113s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          11m    10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:52:06 CET 2026
+NAME               REFERENCE                 TARGETS    MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   6783m/20   1         10        2          2m58s
+NAME                           READY   STATUS    RESTARTS   AGE    IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          118s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          11m    10.244.0.17   task2   <none>           <none>
+---
+Sat Jan 31 13:52:11 CET 2026
+NAME               REFERENCE                 TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+scaletestapp-rps   Deployment/scaletestapp   300m/20   1         10        2          3m3s
+NAME                           READY   STATUS    RESTARTS   AGE    IP            NODE    NOMINATED NODE   READINESS GATES
+scaletestapp-65c6bc858-qmqcq   1/1     Running   0          2m3s   10.244.0.21   task2   <none>           <none>
+scaletestapp-65c6bc858-tl2hf   1/1     Running   0          11m    10.244.0.17   task2   <none>           <none>
+---
