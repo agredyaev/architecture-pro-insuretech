@@ -1,0 +1,154 @@
+' ============================================================================
+' YANDEX CLOUD C4 STYLE — Professional Edition
+' ============================================================================
+' Harmonious professional color palette with Tailwind CSS foundations
+' Blue primary (icons/tech) + Rose accent (borders) + Slate neutrals
+' ============================================================================
+
+!pragma layout smetana
+
+' ============================================================================
+' GLOBAL SETTINGS
+' ============================================================================
+!ROUNDED_STYLE=1
+skinparam dpi 180
+
+' ============================================================================
+' COLOR PALETTE — Harmonious Professional
+' Based on color theory: Complementary blue-rose with neutral slate
+' ============================================================================
+
+' --- Neutrals (Slate) ---
+!$WHITE = "#FFFFFF"
+!$SLATE_50 = "#F8FAFC"
+!$SLATE_100 = "#F1F5F9"
+!$SLATE_200 = "#E2E8F0"
+!$SLATE_300 = "#CBD5E1"
+!$SLATE_400 = "#94A3B8"
+!$SLATE_500 = "#64748B"
+!$SLATE_600 = "#475569"
+!$SLATE_700 = "#334155"
+!$SLATE_800 = "#1E293B"
+!$SLATE_900 = "#0F172A"
+
+' --- Primary Blue (Icons, Tech elements, Boundaries) ---
+!$BLUE_50 = "#EFF6FF"
+!$BLUE_100 = "#DBEAFE"
+!$BLUE_200 = "#BFDBFE"
+!$BLUE_300 = "#93C5FD"
+!$BLUE_400 = "#60A5FA"
+!$BLUE_500 = "#3B82F6"
+!$BLUE_600 = "#2563EB"
+!$BLUE_700 = "#1D4ED8"
+
+' --- Accent Rose (Borders, Highlights) ---
+!$ROSE_400 = "#FB7185"
+!$ROSE_500 = "#F43F5E"
+!$ROSE_600 = "#E11D48"
+
+' ============================================================================
+!$YANDEX_ICON_COLOR = $BLUE_600
+!$ELEMENT_BORDER = $ROSE_500
+!$ELEMENT_BG = $WHITE
+!$ELEMENT_TEXT = $SLATE_800
+!$BOUNDARY_BG = $BLUE_50
+!$BOUNDARY_BORDER = $BLUE_300
+!$BOUNDARY_TEXT = $BLUE_700
+!$EXTERNAL_BG = $SLATE_50
+!$EXTERNAL_BORDER = $SLATE_300
+!$EXTERNAL_TEXT = $SLATE_600
+!$ARROW_COLOR = $SLATE_400
+!$ARROW_TEXT = $SLATE_500
+
+' ============================================================================
+' C4 COLOR VARIABLE OVERRIDES
+' ============================================================================
+!$PERSON_BG_COLOR = $ELEMENT_BG
+!$PERSON_BORDER_COLOR = $ELEMENT_BORDER
+!$PERSON_FONT_COLOR = $ELEMENT_TEXT
+
+!$EXTERNAL_PERSON_BG_COLOR = $EXTERNAL_BG
+!$EXTERNAL_PERSON_BORDER_COLOR = $EXTERNAL_BORDER
+
+!$SYSTEM_BG_COLOR = $ELEMENT_BG
+!$SYSTEM_BORDER_COLOR = $ELEMENT_BORDER
+!$SYSTEM_FONT_COLOR = $ELEMENT_TEXT
+
+!$EXTERNAL_SYSTEM_BG_COLOR = $EXTERNAL_BG
+!$EXTERNAL_SYSTEM_BORDER_COLOR = $EXTERNAL_BORDER
+
+!$CONTAINER_BG_COLOR = $ELEMENT_BG
+!$CONTAINER_BORDER_COLOR = $ELEMENT_BORDER
+!$CONTAINER_FONT_COLOR = $ELEMENT_TEXT
+
+!$EXTERNAL_CONTAINER_BG_COLOR = $EXTERNAL_BG
+!$EXTERNAL_CONTAINER_BORDER_COLOR = $EXTERNAL_BORDER
+
+!$BOUNDARY_COLOR = $BOUNDARY_BORDER
+!$BOUNDARY_BG_COLOR = $BOUNDARY_BG
+
+' ============================================================================
+' ELEMENT STYLES — Rounded corners, balanced visual weight, subtle shadows
+' ============================================================================
+UpdateElementStyle("person", $bgColor=$ELEMENT_BG, $fontColor=$ELEMENT_TEXT, $borderColor=$ELEMENT_BORDER, $shape=RoundedBoxShape(), $borderThickness="1")
+UpdateElementStyle("external_person", $bgColor=$EXTERNAL_BG, $fontColor=$EXTERNAL_TEXT, $borderColor=$EXTERNAL_BORDER, $shape=RoundedBoxShape(), $borderThickness="1")
+UpdateElementStyle("system", $bgColor=$ELEMENT_BG, $fontColor=$ELEMENT_TEXT, $borderColor=$ELEMENT_BORDER, $shape=RoundedBoxShape(), $borderThickness="1")
+UpdateElementStyle("external_system", $bgColor=$EXTERNAL_BG, $fontColor=$EXTERNAL_TEXT, $borderColor=$EXTERNAL_BORDER, $shape=RoundedBoxShape(), $borderThickness="1")
+UpdateElementStyle("container", $bgColor=$ELEMENT_BG, $fontColor=$ELEMENT_TEXT, $borderColor=$ELEMENT_BORDER, $shape=RoundedBoxShape(), $borderThickness="1")
+UpdateElementStyle("external_container", $bgColor=$EXTERNAL_BG, $fontColor=$EXTERNAL_TEXT, $borderColor=$EXTERNAL_BORDER, $shape=RoundedBoxShape(), $borderThickness="1")
+
+UpdateBoundaryStyle("system", $bgColor=$BOUNDARY_BG, $fontColor=$BOUNDARY_TEXT, $borderColor=$BOUNDARY_BORDER, $shape=RoundedBoxShape(), $borderThickness="1", $borderStyle=SolidLine())
+UpdateBoundaryStyle("container", $bgColor=$BOUNDARY_BG, $fontColor=$BOUNDARY_TEXT, $borderColor=$BOUNDARY_BORDER, $shape=RoundedBoxShape(), $borderThickness="1", $borderStyle=SolidLine())
+UpdateBoundaryStyle("enterprise", $bgColor=$BOUNDARY_BG, $fontColor=$BOUNDARY_TEXT, $borderColor=$BOUNDARY_BORDER, $shape=RoundedBoxShape(), $borderThickness="1", $borderStyle=SolidLine())
+
+' ============================================================================
+' SKINPARAM — Premium typography, readable arrows
+' ============================================================================
+skinparam {
+    ' === GENERAL — Clean, no shadows ===
+    Shadowing false
+    Handwritten false
+    Monochrome false
+    
+    ' === TYPOGRAPHY — Larger, more readable ===
+    DefaultFontName "Inter", "SF Pro Display", "Segoe UI", Helvetica, Arial, sans-serif
+    DefaultFontSize 12
+    DefaultFontColor $ELEMENT_TEXT
+    
+    ' === ROUNDED CORNERS — Softer, more premium ===
+    RoundCorner 14
+    
+    ' === ARROWS — Darker labels for readability ===
+    Arrow {
+        Color $SLATE_400
+        FontColor $SLATE_600
+        FontSize 11
+        Thickness 1
+    }
+    
+    ' === TITLE ===
+    Title {
+        FontSize 18
+        FontColor $SLATE_900
+        FontStyle bold
+    }
+    
+    ' === LEGEND ===
+    Legend {
+        BackgroundColor $WHITE
+        BorderColor $SLATE_200
+        FontSize 11
+    }
+    
+    ' === NOTES ===
+    Note {
+        BackgroundColor $SLATE_50
+        BorderColor $SLATE_200
+        FontSize 11
+    }
+}
+
+' ============================================================================
+' INCLUDE YANDEX CLOUD ICONS
+' ============================================================================
+!include yandex_icons.puml

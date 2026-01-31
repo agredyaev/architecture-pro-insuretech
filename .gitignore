@@ -53,6 +53,9 @@ coverage.xml
 .pyre/
 .pytype/
 
+# Ruff 
+.ruff_cache/
+
 # Environments
 .env
 .env.*
@@ -72,8 +75,5 @@ env/
 # OS
 .DS_Store
 
-# Local tooling
-*.log
-
 # Project temp
-.tmp/
+.tmp
