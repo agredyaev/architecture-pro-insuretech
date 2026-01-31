@@ -1,0 +1,1270 @@
+# =============================================================================
+# GraphQL Schema for client-info Service
+# InsureTech - Client Data Management API
+# =============================================================================
+# This schema replaces the REST API to enable flexible data fetching,
+# reducing over-fetching and under-fetching issues with ~500 client attributes.
+# =============================================================================
+#
+# REST ↔ GraphQL Operation Mapping:
+# ---------------------------------
+# GET /clients/{id}              → client(id: UUID!)
+# GET /clients?email={email}     → clientByEmail(email: Email!)
+# GET /clients?phone={phone}     → clientByPhone(phone: Phone!)
+# GET /clients                   → clients(filter, pagination)
+# GET /clients/search?q={query}  → searchClients(query, pagination)
+# POST /clients                  → createClient(input)
+# PUT /clients/{id}              → updateClient(id, input)
+# DELETE /clients/{id}           → deleteClient(id)
+# GET /clients/{id}/contacts     → client { contacts }
+# POST /clients/{id}/contacts    → addContact(clientId, input)
+# PUT /contacts/{id}             → updateContact(id, input)
+# DELETE /contacts/{id}          → deleteContact(id)
+# GET /clients/{id}/documents    → client { documents }
+# POST /clients/{id}/documents   → addDocument(clientId, input)
+# PUT /documents/{id}            → updateDocument(id, input)
+# DELETE /documents/{id}         → deleteDocument(id)
+# GET /clients/{id}/addresses    → client { addresses }
+# POST /clients/{id}/addresses   → addAddress(clientId, input)
+# PUT /addresses/{id}            → updateAddress(id, input)
+# DELETE /addresses/{id}         → deleteAddress(id)
+# GET /clients/{id}/relatives    → client { relatives }
+# POST /clients/{id}/relatives   → addRelative(clientId, input)
+# PUT /relatives/{id}            → updateRelative(id, input)
+# DELETE /relatives/{id}         → deleteRelative(id)
+# GET /clients/{id}/employment   → client { employment }
+# POST /clients/{id}/employment  → setEmployment(clientId, input)
+# PUT /employment/{id}           → updateEmployment(id, input)
+# GET /clients/{id}/bank-accounts → client { bankAccounts }
+# POST /clients/{id}/bank-accounts → addBankAccount(clientId, input)
+# DELETE /bank-accounts/{id}     → deleteBankAccount(id)
+# GET /clients/{id}/consents     → client { consents }
+# POST /clients/{id}/consents    → grantConsent(clientId, input)
+# DELETE /consents/{id}          → revokeConsent(id)
+# GET /clients/{id}/policies     → client { policies }
+# GET /policies/{number}         → policyByNumber(policyNumber)
+# GET /clients/{id}/applications → client { applications }
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SCALARS
+# -----------------------------------------------------------------------------
+
+"""ISO 8601 date format (YYYY-MM-DD)"""
+scalar Date
+
+"""ISO 8601 datetime format with timezone"""
+scalar DateTime
+
+"""Email address format"""
+scalar Email
+
+"""Phone number in international format"""
+scalar Phone
+
+"""UUID v4 format"""
+scalar UUID
+
+# -----------------------------------------------------------------------------
+# ENUMS
+# -----------------------------------------------------------------------------
+
+"""Client status in the system"""
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+  PENDING_VERIFICATION
+}
+
+"""Gender options"""
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+"""Document types supported by the system"""
+enum DocumentType {
+  PASSPORT_RF
+  PASSPORT_FOREIGN
+  DRIVER_LICENSE
+  SNILS
+  INN
+  BIRTH_CERTIFICATE
+  MILITARY_ID
+  RESIDENCE_PERMIT
+}
+
+"""Contact type classification"""
+enum ContactType {
+  PHONE_MOBILE
+  PHONE_HOME
+  PHONE_WORK
+  EMAIL_PERSONAL
+  EMAIL_WORK
+  TELEGRAM
+  WHATSAPP
+}
+
+"""Address type classification"""
+enum AddressType {
+  REGISTRATION
+  RESIDENTIAL
+  WORK
+  CORRESPONDENCE
+}
+
+"""Relationship type for relatives"""
+enum RelationshipType {
+  SPOUSE
+  CHILD
+  PARENT
+  SIBLING
+  GRANDPARENT
+  GRANDCHILD
+  OTHER
+}
+
+"""Insurance product category"""
+enum InsuranceCategory {
+  LIFE
+  HEALTH
+  PROPERTY
+  AUTO
+  TRAVEL
+  LIABILITY
+}
+
+"""Employment type classification"""
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  SELF_EMPLOYED
+  UNEMPLOYED
+  RETIRED
+  STUDENT
+}
+
+"""Bank account type"""
+enum BankAccountType {
+  CHECKING
+  SAVINGS
+  CARD
+}
+
+"""Consent type for data processing"""
+enum ConsentType {
+  PERSONAL_DATA_PROCESSING
+  MARKETING_COMMUNICATIONS
+  THIRD_PARTY_SHARING
+  CREDIT_HISTORY_CHECK
+  AUTOMATED_DECISION_MAKING
+}
+
+"""Policy status"""
+enum PolicyStatus {
+  DRAFT
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  SUSPENDED
+}
+
+"""Sort order direction"""
+enum SortOrder {
+  ASC
+  DESC
+}
+
+# -----------------------------------------------------------------------------
+# INPUT TYPES - Filters and Pagination
+# -----------------------------------------------------------------------------
+
+"""Pagination input for list queries"""
+input PaginationInput {
+  """Page number (1-indexed)"""
+  page: Int = 1
+  """Items per page (max 100)"""
+  limit: Int = 20
+}
+
+"""Client filter criteria"""
+input ClientFilterInput {
+  """Filter by client status"""
+  status: ClientStatus
+  """Filter by registration date range start"""
+  registeredAfter: Date
+  """Filter by registration date range end"""
+  registeredBefore: Date
+  """Search by name (partial match)"""
+  nameContains: String
+  """Filter by email domain"""
+  emailDomain: String
+  """Filter by phone prefix"""
+  phonePrefix: String
+}
+
+"""Document filter criteria"""
+input DocumentFilterInput {
+  """Filter by document type"""
+  type: DocumentType
+  """Filter by expiration status"""
+  isExpired: Boolean
+  """Filter by verification status"""
+  isVerified: Boolean
+}
+
+"""Policy filter criteria"""
+input PolicyFilterInput {
+  """Filter by insurance category"""
+  category: InsuranceCategory
+  """Filter by policy status"""
+  status: PolicyStatus
+  """Filter by start date range"""
+  startDateAfter: Date
+  """Filter by end date range"""
+  endDateBefore: Date
+}
+
+# -----------------------------------------------------------------------------
+# INPUT TYPES - Mutations
+# -----------------------------------------------------------------------------
+
+"""Input for creating a new client"""
+input CreateClientInput {
+  """First name (required)"""
+  firstName: String!
+  """Last name (required)"""
+  lastName: String!
+  """Middle name (patronymic)"""
+  middleName: String
+  """Date of birth (required)"""
+  birthDate: Date!
+  """Gender"""
+  gender: Gender
+  """Primary email (required)"""
+  email: Email!
+  """Primary phone (required)"""
+  phone: Phone!
+  """Citizenship country code (ISO 3166-1 alpha-2)"""
+  citizenship: String
+}
+
+"""Input for updating client basic info"""
+input UpdateClientInput {
+  """First name"""
+  firstName: String
+  """Last name"""
+  lastName: String
+  """Middle name (patronymic)"""
+  middleName: String
+  """Date of birth"""
+  birthDate: Date
+  """Gender"""
+  gender: Gender
+  """Citizenship country code"""
+  citizenship: String
+}
+
+"""Input for creating a contact"""
+input CreateContactInput {
+  """Contact type (required)"""
+  type: ContactType!
+  """Contact value (required)"""
+  value: String!
+  """Is this the primary contact of this type"""
+  isPrimary: Boolean = false
+  """Is this contact verified"""
+  isVerified: Boolean = false
+  """Additional notes"""
+  note: String
+}
+
+"""Input for updating a contact"""
+input UpdateContactInput {
+  """Contact type"""
+  type: ContactType
+  """Contact value"""
+  value: String
+  """Is this the primary contact"""
+  isPrimary: Boolean
+  """Additional notes"""
+  note: String
+}
+
+"""Input for creating a document"""
+input CreateDocumentInput {
+  """Document type (required)"""
+  type: DocumentType!
+  """Document series"""
+  series: String
+  """Document number (required)"""
+  number: String!
+  """Issuing authority"""
+  issuedBy: String
+  """Issue date"""
+  issueDate: Date
+  """Expiration date"""
+  expirationDate: Date
+  """Department code (for RF passport)"""
+  departmentCode: String
+}
+
+"""Input for updating a document"""
+input UpdateDocumentInput {
+  """Document series"""
+  series: String
+  """Document number"""
+  number: String
+  """Issuing authority"""
+  issuedBy: String
+  """Issue date"""
+  issueDate: Date
+  """Expiration date"""
+  expirationDate: Date
+  """Department code"""
+  departmentCode: String
+}
+
+"""Input for creating an address"""
+input CreateAddressInput {
+  """Address type (required)"""
+  type: AddressType!
+  """Country code (ISO 3166-1 alpha-2, required)"""
+  country: String!
+  """Region/State"""
+  region: String
+  """City (required)"""
+  city: String!
+  """Street address"""
+  street: String
+  """Building number"""
+  building: String
+  """Apartment/Suite number"""
+  apartment: String
+  """Postal code"""
+  postalCode: String
+  """Is this the primary address"""
+  isPrimary: Boolean = false
+}
+
+"""Input for updating an address"""
+input UpdateAddressInput {
+  """Address type"""
+  type: AddressType
+  """Country code"""
+  country: String
+  """Region/State"""
+  region: String
+  """City"""
+  city: String
+  """Street address"""
+  street: String
+  """Building number"""
+  building: String
+  """Apartment/Suite number"""
+  apartment: String
+  """Postal code"""
+  postalCode: String
+  """Is this the primary address"""
+  isPrimary: Boolean
+}
+
+"""Input for creating a relative"""
+input CreateRelativeInput {
+  """Relationship type (required)"""
+  relationship: RelationshipType!
+  """First name (required)"""
+  firstName: String!
+  """Last name (required)"""
+  lastName: String!
+  """Middle name"""
+  middleName: String
+  """Date of birth"""
+  birthDate: Date
+  """Phone number"""
+  phone: Phone
+  """Email address"""
+  email: Email
+  """Is this relative a beneficiary"""
+  isBeneficiary: Boolean = false
+}
+
+"""Input for updating a relative"""
+input UpdateRelativeInput {
+  """Relationship type"""
+  relationship: RelationshipType
+  """First name"""
+  firstName: String
+  """Last name"""
+  lastName: String
+  """Middle name"""
+  middleName: String
+  """Date of birth"""
+  birthDate: Date
+  """Phone number"""
+  phone: Phone
+  """Email address"""
+  email: Email
+  """Is this relative a beneficiary"""
+  isBeneficiary: Boolean
+}
+
+"""Input for setting employment information"""
+input SetEmploymentInput {
+  """Employment type (required)"""
+  type: EmploymentType!
+  """Employer name"""
+  employerName: String
+  """Employer INN (tax ID)"""
+  employerInn: String
+  """Position/Job title"""
+  position: String
+  """Monthly income amount"""
+  monthlyIncome: Float
+  """Income currency (ISO 4217)"""
+  incomeCurrency: String = "RUB"
+  """Employment start date"""
+  startDate: Date
+  """Work phone"""
+  workPhone: Phone
+  """Work address"""
+  workAddress: String
+}
+
+"""Input for updating employment information"""
+input UpdateEmploymentInput {
+  """Employment type"""
+  type: EmploymentType
+  """Employer name"""
+  employerName: String
+  """Employer INN (tax ID)"""
+  employerInn: String
+  """Position/Job title"""
+  position: String
+  """Monthly income amount"""
+  monthlyIncome: Float
+  """Income currency (ISO 4217)"""
+  incomeCurrency: String
+  """Employment start date"""
+  startDate: Date
+  """Work phone"""
+  workPhone: Phone
+  """Work address"""
+  workAddress: String
+}
+
+"""Input for adding a bank account"""
+input CreateBankAccountInput {
+  """Account type (required)"""
+  type: BankAccountType!
+  """Bank name (required)"""
+  bankName: String!
+  """Bank BIC code"""
+  bic: String
+  """Account number (required)"""
+  accountNumber: String!
+  """Correspondent account"""
+  correspondentAccount: String
+  """Is this the primary account for payments"""
+  isPrimary: Boolean = false
+}
+
+"""Input for granting consent"""
+input GrantConsentInput {
+  """Consent type (required)"""
+  type: ConsentType!
+  """Consent version/document ID"""
+  documentVersion: String
+  """IP address of consent grant"""
+  ipAddress: String
+  """User agent of consent grant"""
+  userAgent: String
+}
+
+# -----------------------------------------------------------------------------
+# OBJECT TYPES - Core Entities
+# -----------------------------------------------------------------------------
+
+"""Client entity - main aggregate root"""
+type Client {
+  """Unique client identifier"""
+  id: UUID!
+  """First name"""
+  firstName: String!
+  """Last name"""
+  lastName: String!
+  """Middle name (patronymic)"""
+  middleName: String
+  """Full name (computed)"""
+  fullName: String!
+  """Legacy REST field (use fullName)"""
+  name: String @deprecated(reason: "Use fullName")
+  """Date of birth"""
+  birthDate: Date!
+  """Age in years (computed)"""
+  age: Int!
+  """Gender"""
+  gender: Gender
+  """Citizenship country code"""
+  citizenship: String
+  """Client status"""
+  status: ClientStatus!
+  """Registration timestamp"""
+  createdAt: DateTime!
+  """Last update timestamp"""
+  updatedAt: DateTime!
+  
+  # Nested collections - fetched only when requested
+  """Client contacts (phones, emails, messengers)"""
+  contacts(filter: DocumentFilterInput): [Contact!]!
+  """Client documents (passport, driver license, etc.)"""
+  documents(filter: DocumentFilterInput): [Document!]!
+  """Client addresses"""
+  addresses(type: AddressType): [Address!]!
+  """Client relatives and beneficiaries"""
+  relatives(relationship: RelationshipType): [Relative!]!
+  """Client insurance policies"""
+  policies(filter: PolicyFilterInput): [Policy!]!
+  """Client insurance applications"""
+  applications(status: ApplicationStatus): [Application!]!
+  
+  # Employment and financial data
+  """Employment information"""
+  employment: Employment
+  """Bank accounts for payments"""
+  bankAccounts: [BankAccount!]!
+  """Data processing consents"""
+  consents(type: ConsentType): [Consent!]!
+  
+  # Convenience accessors
+  """Primary email contact"""
+  primaryEmail: Contact
+  """Primary phone contact"""
+  primaryPhone: Contact
+  """Primary address"""
+  primaryAddress: Address
+  """Main identity document (RF passport or foreign passport)"""
+  mainDocument: Document
+  """Primary bank account"""
+  primaryBankAccount: BankAccount
+}
+
+"""Contact information"""
+type Contact {
+  """Unique contact identifier"""
+  id: UUID!
+  """Contact type"""
+  type: ContactType!
+  """Contact value (phone number, email, etc.)"""
+  value: String!
+  """Is this the primary contact of this type"""
+  isPrimary: Boolean!
+  """Is this contact verified"""
+  isVerified: Boolean!
+  """Verification timestamp"""
+  verifiedAt: DateTime
+  """Additional notes"""
+  note: String
+  """Creation timestamp"""
+  createdAt: DateTime!
+  """Last update timestamp"""
+  updatedAt: DateTime!
+}
+
+"""Identity document"""
+type Document {
+  """Unique document identifier"""
+  id: UUID!
+  """Document type"""
+  type: DocumentType!
+  """Document series"""
+  series: String
+  """Document number"""
+  number: String!
+  """Masked number for display (e.g., **** 1234)"""
+  maskedNumber: String!
+  """Issuing authority"""
+  issuedBy: String
+  """Issue date"""
+  issueDate: Date
+  """Expiration date"""
+  expirationDate: Date
+  """Legacy REST field (use expirationDate)"""
+  expiryDate: Date @deprecated(reason: "Use expirationDate")
+  """Is document expired (computed)"""
+  isExpired: Boolean!
+  """Days until expiration (computed, null if no expiration)"""
+  daysUntilExpiration: Int
+  """Department code (for RF passport)"""
+  departmentCode: String
+  """Is document verified"""
+  isVerified: Boolean!
+  """Verification timestamp"""
+  verifiedAt: DateTime
+  """Creation timestamp"""
+  createdAt: DateTime!
+  """Last update timestamp"""
+  updatedAt: DateTime!
+}
+
+"""Physical address"""
+type Address {
+  """Unique address identifier"""
+  id: UUID!
+  """Address type"""
+  type: AddressType!
+  """Country code (ISO 3166-1 alpha-2)"""
+  country: String!
+  """Country name"""
+  countryName: String!
+  """Region/State"""
+  region: String
+  """City"""
+  city: String!
+  """Street address"""
+  street: String
+  """Building number"""
+  building: String
+  """Apartment/Suite number"""
+  apartment: String
+  """Postal code"""
+  postalCode: String
+  """Full formatted address (computed)"""
+  fullAddress: String!
+  """Is this the primary address"""
+  isPrimary: Boolean!
+  """Creation timestamp"""
+  createdAt: DateTime!
+  """Last update timestamp"""
+  updatedAt: DateTime!
+}
+
+"""Relative or beneficiary"""
+type Relative {
+  """Unique relative identifier"""
+  id: UUID!
+  """Relationship type"""
+  relationship: RelationshipType!
+  """Legacy REST field (use relationship)"""
+  relationType: RelationshipType @deprecated(reason: "Use relationship")
+  """First name"""
+  firstName: String!
+  """Last name"""
+  lastName: String!
+  """Middle name"""
+  middleName: String
+  """Full name (computed)"""
+  fullName: String!
+  """Legacy REST field (use fullName)"""
+  name: String @deprecated(reason: "Use fullName")
+  """Date of birth"""
+  birthDate: Date
+  """Age in years (computed)"""
+  age: Int
+  """Phone number"""
+  phone: Phone
+  """Email address"""
+  email: Email
+  """Is this relative a beneficiary"""
+  isBeneficiary: Boolean!
+  """Beneficiary percentage (if applicable)"""
+  beneficiaryPercentage: Float
+  """Creation timestamp"""
+  createdAt: DateTime!
+  """Last update timestamp"""
+  updatedAt: DateTime!
+}
+
+"""Insurance policy"""
+type Policy {
+  """Unique policy identifier"""
+  id: UUID!
+  """Policy number"""
+  policyNumber: String!
+  """Insurance category"""
+  category: InsuranceCategory!
+  """Policy status"""
+  status: PolicyStatus!
+  """Insurance company name"""
+  insurerName: String!
+  """Policy start date"""
+  startDate: Date!
+  """Policy end date"""
+  endDate: Date!
+  """Is policy active (computed)"""
+  isActive: Boolean!
+  """Days until expiration (computed)"""
+  daysUntilExpiration: Int
+  """Premium amount"""
+  premiumAmount: Float!
+  """Premium currency (ISO 4217)"""
+  premiumCurrency: String!
+  """Coverage amount"""
+  coverageAmount: Float!
+  """Coverage currency (ISO 4217)"""
+  coverageCurrency: String!
+  """Creation timestamp"""
+  createdAt: DateTime!
+  """Last update timestamp"""
+  updatedAt: DateTime!
+}
+
+"""Application status"""
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+"""Insurance application"""
+type Application {
+  """Unique application identifier"""
+  id: UUID!
+  """Application number"""
+  applicationNumber: String!
+  """Insurance category"""
+  category: InsuranceCategory!
+  """Application status"""
+  status: ApplicationStatus!
+  """Submission timestamp"""
+  submittedAt: DateTime
+  """Decision timestamp"""
+  decidedAt: DateTime
+  """Rejection reason (if rejected)"""
+  rejectionReason: String
+  """Resulting policy (if approved)"""
+  policy: Policy
+  """Creation timestamp"""
+  createdAt: DateTime!
+  """Last update timestamp"""
+  updatedAt: DateTime!
+}
+
+"""Employment information"""
+type Employment {
+  """Unique employment record identifier"""
+  id: UUID!
+  """Employment type"""
+  type: EmploymentType!
+  """Employer name"""
+  employerName: String
+  """Employer INN (tax ID)"""
+  employerInn: String
+  """Position/Job title"""
+  position: String
+  """Monthly income amount"""
+  monthlyIncome: Float
+  """Income currency (ISO 4217)"""
+  incomeCurrency: String!
+  """Annual income (computed)"""
+  annualIncome: Float
+  """Employment start date"""
+  startDate: Date
+  """Years at current employer (computed)"""
+  yearsEmployed: Float
+  """Work phone"""
+  workPhone: Phone
+  """Work address"""
+  workAddress: String
+  """Is employment verified"""
+  isVerified: Boolean!
+  """Verification timestamp"""
+  verifiedAt: DateTime
+  """Creation timestamp"""
+  createdAt: DateTime!
+  """Last update timestamp"""
+  updatedAt: DateTime!
+}
+
+"""Bank account for payments"""
+type BankAccount {
+  """Unique bank account identifier"""
+  id: UUID!
+  """Account type"""
+  type: BankAccountType!
+  """Bank name"""
+  bankName: String!
+  """Bank BIC code"""
+  bic: String
+  """Account number (masked for display)"""
+  maskedAccountNumber: String!
+  """Full account number (requires authorization)"""
+  accountNumber: String!
+  """Correspondent account"""
+  correspondentAccount: String
+  """Is this the primary account"""
+  isPrimary: Boolean!
+  """Is account verified"""
+  isVerified: Boolean!
+  """Verification timestamp"""
+  verifiedAt: DateTime
+  """Creation timestamp"""
+  createdAt: DateTime!
+  """Last update timestamp"""
+  updatedAt: DateTime!
+}
+
+"""Data processing consent record"""
+type Consent {
+  """Unique consent identifier"""
+  id: UUID!
+  """Consent type"""
+  type: ConsentType!
+  """Is consent currently active"""
+  isActive: Boolean!
+  """Consent grant timestamp"""
+  grantedAt: DateTime!
+  """Consent revocation timestamp (if revoked)"""
+  revokedAt: DateTime
+  """Consent expiration date"""
+  expiresAt: DateTime
+  """Consent version/document ID"""
+  documentVersion: String
+  """IP address of consent grant"""
+  ipAddress: String
+  """User agent of consent grant"""
+  userAgent: String
+}
+
+# -----------------------------------------------------------------------------
+# PAGINATION TYPES
+# -----------------------------------------------------------------------------
+
+"""Page information for paginated results"""
+type PageInfo {
+  """Current page number"""
+  currentPage: Int!
+  """Total number of pages"""
+  totalPages: Int!
+  """Total number of items"""
+  totalItems: Int!
+  """Items per page"""
+  itemsPerPage: Int!
+  """Has next page"""
+  hasNextPage: Boolean!
+  """Has previous page"""
+  hasPreviousPage: Boolean!
+}
+
+"""Paginated list of clients"""
+type ClientConnection {
+  """List of clients"""
+  items: [Client!]!
+  """Pagination information"""
+  pageInfo: PageInfo!
+}
+
+# -----------------------------------------------------------------------------
+# MUTATION RESPONSE TYPES
+# -----------------------------------------------------------------------------
+
+"""Generic mutation response"""
+interface MutationResponse {
+  """Operation success status"""
+  success: Boolean!
+  """Human-readable message"""
+  message: String!
+  """Error code (if failed)"""
+  errorCode: String
+}
+
+"""Response for client mutations"""
+type ClientMutationResponse implements MutationResponse {
+  success: Boolean!
+  message: String!
+  errorCode: String
+  """Created or updated client"""
+  client: Client
+}
+
+"""Response for contact mutations"""
+type ContactMutationResponse implements MutationResponse {
+  success: Boolean!
+  message: String!
+  errorCode: String
+  """Created or updated contact"""
+  contact: Contact
+}
+
+"""Response for document mutations"""
+type DocumentMutationResponse implements MutationResponse {
+  success: Boolean!
+  message: String!
+  errorCode: String
+  """Created or updated document"""
+  document: Document
+}
+
+"""Response for address mutations"""
+type AddressMutationResponse implements MutationResponse {
+  success: Boolean!
+  message: String!
+  errorCode: String
+  """Created or updated address"""
+  address: Address
+}
+
+"""Response for relative mutations"""
+type RelativeMutationResponse implements MutationResponse {
+  success: Boolean!
+  message: String!
+  errorCode: String
+  """Created or updated relative"""
+  relative: Relative
+}
+
+"""Response for employment mutations"""
+type EmploymentMutationResponse implements MutationResponse {
+  success: Boolean!
+  message: String!
+  errorCode: String
+  """Created or updated employment"""
+  employment: Employment
+}
+
+"""Response for bank account mutations"""
+type BankAccountMutationResponse implements MutationResponse {
+  success: Boolean!
+  message: String!
+  errorCode: String
+  """Created or updated bank account"""
+  bankAccount: BankAccount
+}
+
+"""Response for consent mutations"""
+type ConsentMutationResponse implements MutationResponse {
+  success: Boolean!
+  message: String!
+  errorCode: String
+  """Created or updated consent"""
+  consent: Consent
+}
+
+"""Response for delete operations"""
+type DeleteMutationResponse implements MutationResponse {
+  success: Boolean!
+  message: String!
+  errorCode: String
+  """ID of deleted entity"""
+  deletedId: UUID
+}
+
+# -----------------------------------------------------------------------------
+# QUERIES
+# -----------------------------------------------------------------------------
+
+type Query {
+  # --- Client queries ---
+  
+  """
+  Get client by ID.
+  Allows flexible field selection to fetch only required data.
+  """
+  client(id: UUID!): Client
+  
+  """
+  Get client by email address.
+  """
+  clientByEmail(email: Email!): Client
+  
+  """
+  Get client by phone number.
+  """
+  clientByPhone(phone: Phone!): Client
+  
+  """
+  Get client by document (e.g., passport number).
+  """
+  clientByDocument(type: DocumentType!, number: String!): Client
+  
+  """
+  List clients with filtering and pagination.
+  """
+  clients(
+    filter: ClientFilterInput
+    pagination: PaginationInput
+    sortBy: String = "createdAt"
+    sortOrder: SortOrder = DESC
+  ): ClientConnection!
+  
+  """
+  Search clients by name, email, or phone (partial match).
+  """
+  searchClients(
+    query: String!
+    pagination: PaginationInput
+  ): ClientConnection!
+  
+  # --- Direct entity queries (for specific use cases) ---
+  
+  """
+  Get contact by ID.
+  """
+  contact(id: UUID!): Contact
+  
+  """
+  Get document by ID.
+  """
+  document(id: UUID!): Document
+  
+  """
+  Get address by ID.
+  """
+  address(id: UUID!): Address
+  
+  """
+  Get relative by ID.
+  """
+  relative(id: UUID!): Relative
+  
+  """
+  Get policy by ID.
+  """
+  policy(id: UUID!): Policy
+  
+  """
+  Get policy by policy number.
+  """
+  policyByNumber(policyNumber: String!): Policy
+  
+  """
+  Get application by ID.
+  """
+  application(id: UUID!): Application
+  
+  """
+  Get application by application number.
+  """
+  applicationByNumber(applicationNumber: String!): Application
+  
+  # --- Validation queries ---
+  
+  """
+  Check if email is already registered.
+  """
+  isEmailRegistered(email: Email!): Boolean!
+  
+  """
+  Check if phone is already registered.
+  """
+  isPhoneRegistered(phone: Phone!): Boolean!
+  
+  """
+  Validate document number format.
+  """
+  validateDocumentNumber(type: DocumentType!, number: String!): Boolean!
+}
+
+# -----------------------------------------------------------------------------
+# MUTATIONS
+# -----------------------------------------------------------------------------
+
+type Mutation {
+  # --- Client mutations ---
+  
+  """
+  Create a new client.
+  """
+  createClient(input: CreateClientInput!): ClientMutationResponse!
+  
+  """
+  Update client basic information.
+  """
+  updateClient(id: UUID!, input: UpdateClientInput!): ClientMutationResponse!
+  
+  """
+  Change client status.
+  """
+  changeClientStatus(id: UUID!, status: ClientStatus!): ClientMutationResponse!
+  
+  """
+  Delete client (soft delete).
+  """
+  deleteClient(id: UUID!): DeleteMutationResponse!
+  
+  # --- Contact mutations ---
+  
+  """
+  Add contact to client.
+  """
+  addContact(clientId: UUID!, input: CreateContactInput!): ContactMutationResponse!
+  
+  """
+  Update existing contact.
+  """
+  updateContact(id: UUID!, input: UpdateContactInput!): ContactMutationResponse!
+  
+  """
+  Delete contact.
+  """
+  deleteContact(id: UUID!): DeleteMutationResponse!
+  
+  """
+  Verify contact (mark as verified).
+  """
+  verifyContact(id: UUID!): ContactMutationResponse!
+  
+  """
+  Set contact as primary.
+  """
+  setContactPrimary(id: UUID!): ContactMutationResponse!
+  
+  # --- Document mutations ---
+  
+  """
+  Add document to client.
+  """
+  addDocument(clientId: UUID!, input: CreateDocumentInput!): DocumentMutationResponse!
+  
+  """
+  Update existing document.
+  """
+  updateDocument(id: UUID!, input: UpdateDocumentInput!): DocumentMutationResponse!
+  
+  """
+  Delete document.
+  """
+  deleteDocument(id: UUID!): DeleteMutationResponse!
+  
+  """
+  Verify document (mark as verified).
+  """
+  verifyDocument(id: UUID!): DocumentMutationResponse!
+  
+  # --- Address mutations ---
+  
+  """
+  Add address to client.
+  """
+  addAddress(clientId: UUID!, input: CreateAddressInput!): AddressMutationResponse!
+  
+  """
+  Update existing address.
+  """
+  updateAddress(id: UUID!, input: UpdateAddressInput!): AddressMutationResponse!
+  
+  """
+  Delete address.
+  """
+  deleteAddress(id: UUID!): DeleteMutationResponse!
+  
+  """
+  Set address as primary.
+  """
+  setAddressPrimary(id: UUID!): AddressMutationResponse!
+  
+  # --- Relative mutations ---
+  
+  """
+  Add relative to client.
+  """
+  addRelative(clientId: UUID!, input: CreateRelativeInput!): RelativeMutationResponse!
+  
+  """
+  Update existing relative.
+  """
+  updateRelative(id: UUID!, input: UpdateRelativeInput!): RelativeMutationResponse!
+  
+  """
+  Delete relative.
+  """
+  deleteRelative(id: UUID!): DeleteMutationResponse!
+  
+  """
+  Set relative as beneficiary with percentage.
+  """
+  setBeneficiary(id: UUID!, percentage: Float!): RelativeMutationResponse!
+  
+  # --- Employment mutations ---
+  
+  """
+  Set or create employment information for client.
+  """
+  setEmployment(clientId: UUID!, input: SetEmploymentInput!): EmploymentMutationResponse!
+  
+  """
+  Update existing employment information.
+  """
+  updateEmployment(id: UUID!, input: UpdateEmploymentInput!): EmploymentMutationResponse!
+  
+  """
+  Delete employment information.
+  """
+  deleteEmployment(id: UUID!): DeleteMutationResponse!
+  
+  """
+  Verify employment information.
+  """
+  verifyEmployment(id: UUID!): EmploymentMutationResponse!
+  
+  # --- Bank account mutations ---
+  
+  """
+  Add bank account to client.
+  """
+  addBankAccount(clientId: UUID!, input: CreateBankAccountInput!): BankAccountMutationResponse!
+  
+  """
+  Delete bank account.
+  """
+  deleteBankAccount(id: UUID!): DeleteMutationResponse!
+  
+  """
+  Set bank account as primary.
+  """
+  setBankAccountPrimary(id: UUID!): BankAccountMutationResponse!
+  
+  """
+  Verify bank account.
+  """
+  verifyBankAccount(id: UUID!): BankAccountMutationResponse!
+  
+  # --- Consent mutations ---
+  
+  """
+  Grant data processing consent.
+  """
+  grantConsent(clientId: UUID!, input: GrantConsentInput!): ConsentMutationResponse!
+  
+  """
+  Revoke data processing consent.
+  """
+  revokeConsent(id: UUID!): ConsentMutationResponse!
+}
+
+# -----------------------------------------------------------------------------
+# SUBSCRIPTIONS (for real-time updates)
+# -----------------------------------------------------------------------------
+
+type Subscription {
+  """
+  Subscribe to client data changes.
+  """
+  clientUpdated(clientId: UUID!): Client!
+  
+  """
+  Subscribe to document verification status changes.
+  """
+  documentVerified(clientId: UUID!): Document!
+  
+  """
+  Subscribe to policy status changes.
+  """
+  policyStatusChanged(clientId: UUID!): Policy!
+  
+  """
+  Subscribe to application status changes.
+  """
+  applicationStatusChanged(clientId: UUID!): Application!
+  
+  """
+  Subscribe to consent changes.
+  """
+  consentChanged(clientId: UUID!): Consent!
+}
