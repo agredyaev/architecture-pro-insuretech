@@ -1,0 +1,88 @@
+@startuml
+' InsureTech OSAGO Container Diagram (Task4 - To-Be)
+' Extends Task3 with osago-aggregator and resilience patterns
+
+!include <C4/C4_Container>
+!include ../styles/yandex_c4_style.puml
+!include ../styles/yandex_icons.puml
+
+title "InsureTech — OSAGO Container Diagram (To-Be)"
+
+' === ACTORS ===
+Person(customer, "Customer", "Web/Mobile user requesting OSAGO quotes", $sprite="YandexCloudOrganization,color=$YANDEX_ICON_COLOR")
+Person_Ext(partner, "B2B Partner", "Integrates via public API", $sprite="YandexCloudOrganization,color=$YANDEX_ICON_COLOR")
+
+' === INSURETECH SYSTEM BOUNDARY ===
+System_Boundary(insuretech, "InsureTech Platform") {
+
+    ' --- Frontend Subsystem ---
+    Container_Boundary(frontend, "Frontend Subsystem") {
+        Container(web_app, "Web App", "React, Nginx", "Customer portal with SSE support for real-time OSAGO offers", $sprite="YandexCloudApps,color=$YANDEX_ICON_COLOR")
+        Container(api_gw, "API Gateway", "Kong / Nginx", "Rate limiting, auth, routing", $sprite="YandexApiGateway,color=$YANDEX_ICON_COLOR")
+    }
+
+    ' --- Application Services Subsystem ---
+    Container_Boundary(k8s, "Application Services (Managed Kubernetes, Multi-replica)") {
+        Container(core_app, "core-app", "Java, Spring Boot", "Insurance flows, OSAGO orchestration, SSE endpoint", $sprite="YandexComputeCloud,color=$YANDEX_ICON_COLOR")
+        Container(client_info, "client-info", "Kotlin, Spring Boot", "Customer data management", $sprite="YandexComputeCloud,color=$YANDEX_ICON_COLOR")
+        Container(ins_product_agg, "ins-product-aggregator", "Python", "Product/tariff aggregation from insurers", $sprite="YandexFunctions,color=$YANDEX_ICON_COLOR")
+        Container(ins_settlement, "ins-comp-settlement", "Kotlin, Spring Boot", "Monthly settlements with insurers", $sprite="YandexComputeCloud,color=$YANDEX_ICON_COLOR")
+        Container(osago_agg, "osago-aggregator", "Go, gRPC", "OSAGO quotes aggregation, polling insurers, resilience patterns", $sprite="YandexFunctions,color=$YANDEX_ICON_COLOR")
+    }
+
+    ' --- Data & Messaging ---
+    Container_Boundary(data, "Data & Messaging") {
+        ContainerQueue(kafka, "Message Broker", "Kafka", "Events", $sprite="YandexMessageQueue,color=$YANDEX_ICON_COLOR")
+        ContainerDb(pg_core, "core-app DB", "PostgreSQL", "Policies, outbox", $sprite="YandexManagedPostgresql,color=$YANDEX_ICON_COLOR")
+        ContainerDb(pg_client, "client-info DB", "PostgreSQL", "Clients", $sprite="YandexManagedPostgresql,color=$YANDEX_ICON_COLOR")
+        ContainerDb(pg_aggregator, "aggregator DB", "PostgreSQL", "Products", $sprite="YandexManagedPostgresql,color=$YANDEX_ICON_COLOR")
+        ContainerDb(pg_settlement, "settlement DB", "PostgreSQL", "Settlements", $sprite="YandexManagedPostgresql,color=$YANDEX_ICON_COLOR")
+        ContainerDb(pg_osago, "osago DB", "PostgreSQL", "OSAGO", $sprite="YandexManagedPostgresql,color=$YANDEX_ICON_COLOR")
+        Container(redis, "Redis", "Managed Redis", "Cache", $sprite="YandexManagedRedis,color=$YANDEX_ICON_COLOR")
+    }
+
+}
+
+' === EXTERNAL SYSTEMS ===
+System_Ext(insurers, "Insurance Companies", "OSAGO quotes API (up to 10)", $sprite="YandexCloudApps,color=$EXTERNAL_BORDER")
+
+' === RELATIONSHIPS ===
+
+' Customer interactions
+Rel_D(customer, web_app, "Browse, submit OSAGO application", "HTTPS")
+Rel_R(web_app, api_gw, "API requests", "HTTPS")
+Rel_D(api_gw, core_app, "Routed requests [RL]", "HTTP")
+
+' Partner interactions
+Rel_D(partner, api_gw, "API requests [RL]", "HTTPS")
+
+' Web App real-time updates
+Rel_U(core_app, web_app, "OSAGO offers stream", "SSE")
+
+' Core App internal calls
+Rel_R(core_app, client_info, "Customer data", "gRPC")
+Rel_R(core_app, osago_agg, "Create OSAGO app", "gRPC")
+
+' osago-aggregator -> Insurers (with resilience patterns)
+Rel_R(osago_agg, insurers, "OSAGO quotes <$ResilienceRateLimiter><$ResilienceCircuitBreaker><$ResilienceRetry><$ResilienceTimeout>", "REST")
+Rel_R(ins_product_agg, insurers, "Products", "REST")
+Rel_R(ins_settlement, insurers, "Settlements", "REST")
+
+' Event-driven via Kafka
+Rel_D(ins_product_agg, kafka, "ProductUpdated", "Kafka")
+Rel_D(osago_agg, kafka, "OsagoOfferReceived", "Kafka")
+Rel_D(core_app, kafka, "PolicyCreated", "Kafka")
+Rel_L(kafka, core_app, "Events", "Kafka")
+Rel_R(kafka, ins_settlement, "Events", "Kafka")
+
+' Database connections
+Rel_D(core_app, pg_core, "R/W", "JDBC")
+Rel_D(client_info, pg_client, "R/W", "JDBC")
+Rel_D(ins_product_agg, pg_aggregator, "R/W", "JDBC")
+Rel_D(ins_settlement, pg_settlement, "R/W", "JDBC")
+Rel_D(osago_agg, pg_osago, "R/W", "JDBC")
+Rel_D(core_app, redis, "Cache", "TCP")
+Rel_D(osago_agg, redis, "Locks", "TCP")
+
+HIDE_STEREOTYPE()
+@enduml

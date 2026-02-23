@@ -1,0 +1,77 @@
+@startuml
+' InsureTech Container Diagram (To-Be) — Event-Driven Architecture
+
+!include <C4/C4_Container>
+!include ../styles/yandex_c4_style.puml
+!include ../styles/yandex_icons.puml
+
+
+title "InsureTech — Container Diagram (To-Be) — Event-Driven Architecture"
+
+Person(customer, "Customer", "Web user", $sprite="YandexCloudOrganization,color=$YANDEX_ICON_COLOR")
+Person_Ext(partner, "B2B Partner", "Integrates via public API", $sprite="YandexCloudOrganization,color=$YANDEX_ICON_COLOR")
+
+System_Boundary(insuretech, "InsureTech Platform") {
+    
+    Container_Boundary(frontend, "Frontend Subsystem") {
+        Container(web_app, "Web App", "React, Nginx", "Customer portal", $sprite="YandexCloudApps,color=$YANDEX_ICON_COLOR")
+        Container(api_gateway, "API Gateway", "Kong/Nginx", "Routes requests, auth, rate limiting", $sprite="YandexApiGateway,color=$YANDEX_ICON_COLOR")
+    }
+    
+    Container_Boundary(backend, "Application Services (Managed Kubernetes, Multi-replica)") {
+        Container(core_app, "core-app", "Java, Spring Boot", "Insurance flows, policy creation", $sprite="YandexComputeCloud,color=$YANDEX_ICON_COLOR")
+        Container(client_info, "client-info", "Kotlin, Spring Boot", "Customer data management", $sprite="YandexComputeCloud,color=$YANDEX_ICON_COLOR")
+        Container(ins_product_aggregator, "ins-product-aggregator", "Python", "Aggregates product/tariff data", $sprite="YandexFunctions,color=$YANDEX_ICON_COLOR")
+        Container(ins_comp_settlement, "ins-comp-settlement", "Kotlin, Spring Boot", "Monthly settlements", $sprite="YandexComputeCloud,color=$YANDEX_ICON_COLOR")
+    }
+    
+    Container_Boundary(data, "Data & Messaging") {
+        ContainerQueue(kafka, "Message Broker", "Managed Kafka", "Event streaming", $sprite="YandexMessageQueue,color=$YANDEX_ICON_COLOR")
+        ContainerDb(core_db, "core-app DB", "PostgreSQL", "Policies, outbox", $sprite="YandexManagedPostgresql,color=$YANDEX_ICON_COLOR")
+        ContainerDb(client_db, "client-info DB", "PostgreSQL", "Client data", $sprite="YandexManagedPostgresql,color=$YANDEX_ICON_COLOR")
+        ContainerDb(aggregator_db, "aggregator DB", "PostgreSQL", "Products, outbox", $sprite="YandexManagedPostgresql,color=$YANDEX_ICON_COLOR")
+        ContainerDb(settlement_db, "settlement DB", "PostgreSQL", "Settlements", $sprite="YandexManagedPostgresql,color=$YANDEX_ICON_COLOR")
+        Container(redis, "Redis", "Managed Redis", "Cache", $sprite="YandexManagedRedis,color=$YANDEX_ICON_COLOR")
+    }
+    
+}
+
+System_Ext(insurers, "Insurance Companies", "External providers (up to 10)", $sprite="YandexCloudApps,color=$EXTERNAL_BORDER")
+
+' Customer interactions
+Rel_D(customer, web_app, "Uses", "HTTPS")
+Rel_D(partner, api_gateway, "API requests", "REST/HTTPS")
+
+' Web App to Backend
+Rel_R(web_app, api_gateway, "Requests", "HTTPS")
+Rel_D(api_gateway, core_app, "Routes", "HTTP")
+Rel_D(api_gateway, client_info, "Routes", "HTTP")
+
+' Synchronous REST (retained)
+Rel_R(core_app, client_info, "Customer data", "gRPC")
+
+' Event-Driven: Product Updates (Transactional Outbox)
+Rel_R(ins_product_aggregator, insurers, "Fetches products", "REST/SOAP")
+Rel_D(ins_product_aggregator, aggregator_db, "Read/Write + outbox", "JDBC")
+Rel_D(ins_product_aggregator, kafka, "ProductUpdated", "Kafka")
+
+' Event Consumers
+Rel_L(kafka, core_app, "ProductUpdated", "Kafka")
+Rel_R(kafka, ins_comp_settlement, "ProductUpdated, PolicyCreated", "Kafka")
+
+' Event-Driven: Policy Events (Transactional Outbox)
+Rel_D(core_app, core_db, "Read/Write + outbox", "JDBC")
+Rel_D(core_app, kafka, "PolicyCreated", "Kafka")
+
+' Database connections
+Rel_D(client_info, client_db, "Read/Write", "JDBC")
+Rel_D(ins_comp_settlement, settlement_db, "Read/Write", "JDBC")
+
+' Cache connections
+Rel_D(core_app, redis, "Session, cache", "TCP")
+
+' Settlement to Insurance Companies
+Rel_R(ins_comp_settlement, insurers, "Settlement reports", "REST")
+
+HIDE_STEREOTYPE()
+@enduml

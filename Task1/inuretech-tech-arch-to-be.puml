@@ -1,0 +1,102 @@
+@startuml
+' InsureTech target tech architecture (to-be)
+
+!include <C4/C4_Container>
+!include ../styles/yandex_c4_style.puml
+!include ../styles/yandex_icons.puml
+
+
+title "InsureTech — Target Tech Architecture (To-Be)"
+
+Person(customer, "Customer", "Web user", $sprite="YandexCloudOrganization,color=$YANDEX_ICON_COLOR")
+Person_Ext(partner, "B2B Partner", "Integrates via public API", $sprite="YandexCloudOrganization,color=$YANDEX_ICON_COLOR")
+
+System_Boundary(edge, "Global Edge") {
+    Container(geo_dns, "Geo DNS", "Cloud DNS", "Geo routing, health checks", $sprite="YandexCloudDns,color=$YANDEX_ICON_COLOR")
+    Container(cdn, "CDN", "Object Storage + CDN", "Static assets", $sprite="YandexObjectStorage,color=$YANDEX_ICON_COLOR")
+}
+
+note right of edge
+  Availability: 99.9%
+  RTO: <= 45 min
+  RPO: <= 15 min
+  Geo latency: CDN + GeoDNS routes to nearest healthy region
+end note
+
+System_Boundary(insuretech, "InsureTech Cloud") {
+    Container_Boundary(region_west, "Region West (Active)") {
+        Container(lb_w, "Load Balancer", "NLB", "TLS, health checks", $sprite="YandexNetworkLoadBalancer,color=$YANDEX_ICON_COLOR")
+        Container_Boundary(k8s_w, "Kubernetes (Multi-AZ, HPA, independent cluster)") {
+            Container(web_w, "Web App", "React", "Portal", $sprite="YandexCloudApps,color=$YANDEX_ICON_COLOR")
+            Container(core_w, "core-app", "Java", "Business logic", $sprite="YandexComputeCloud,color=$YANDEX_ICON_COLOR")
+            Container(client_w, "client-info", "Kotlin", "Clients", $sprite="YandexComputeCloud,color=$YANDEX_ICON_COLOR")
+            Container(agg_w, "ins-product-aggregator", "Python", "Products", $sprite="YandexFunctions,color=$YANDEX_ICON_COLOR")
+            Container(settle_w, "ins-comp-settlement", "Kotlin", "Settlements", $sprite="YandexComputeCloud,color=$YANDEX_ICON_COLOR")
+        }
+        ContainerDb(pg_primary, "PostgreSQL (Primary)", "Managed PG", "PITR, sync replicas", $sprite="YandexManagedPostgresql,color=$YANDEX_ICON_COLOR")
+        Container(cache_w, "Redis", "Managed Redis", "Cache", $sprite="YandexManagedRedis,color=$YANDEX_ICON_COLOR")
+    }
+
+    Container_Boundary(region_east, "Region East (DR)") {
+        Container(lb_e, "Load Balancer", "NLB", "TLS, health checks", $sprite="YandexNetworkLoadBalancer,color=$YANDEX_ICON_COLOR")
+        Container_Boundary(k8s_e, "Kubernetes (Multi-AZ, HPA, independent cluster)") {
+            Container(web_e, "Web App", "React", "Portal", $sprite="YandexCloudApps,color=$YANDEX_ICON_COLOR")
+            Container(core_e, "core-app", "Java", "Business logic", $sprite="YandexComputeCloud,color=$YANDEX_ICON_COLOR")
+            Container(client_e, "client-info", "Kotlin", "Clients", $sprite="YandexComputeCloud,color=$YANDEX_ICON_COLOR")
+            Container(agg_e, "ins-product-aggregator", "Python", "Products", $sprite="YandexFunctions,color=$YANDEX_ICON_COLOR")
+            Container(settle_e, "ins-comp-settlement", "Kotlin", "Settlements", $sprite="YandexComputeCloud,color=$YANDEX_ICON_COLOR")
+        }
+        ContainerDb(pg_replica, "PostgreSQL (DR)", "Managed PG", "Async replica", $sprite="YandexManagedPostgresql,color=$YANDEX_ICON_COLOR")
+        Container(cache_e, "Redis", "Managed Redis", "Cache", $sprite="YandexManagedRedis,color=$YANDEX_ICON_COLOR")
+    }
+
+    ContainerDb(backups, "Backups", "Object Storage", "PITR (RPO 15m)", $sprite="YandexObjectStorage,color=$YANDEX_ICON_COLOR")
+}
+
+note right of insuretech
+  Scaling: HPA + Cluster Autoscaler (horizontal)
+  Vertical scaling: node size (CPU/RAM)
+  Database sharding: not required (data volume ~50 GB)
+end note
+
+System_Ext(insurers, "Insurance Companies", "Provide quotes", $sprite="YandexCloudApps,color=$EXTERNAL_BORDER")
+System_Ext(payments, "Payment Service", "External payment provider", $sprite="YandexCloudBilling,color=$EXTERNAL_BORDER")
+
+' User interactions
+Rel_D(customer, cdn, "Static", "HTTPS")
+Rel_D(customer, geo_dns, "Dynamic", "HTTPS")
+Rel_D(partner, geo_dns, "API", "HTTPS")
+
+' Edge to regions
+Rel_D(geo_dns, lb_w, "Primary (L7 /healthz)", "HTTPS")
+Rel_D(geo_dns, lb_e, "Failover (L7 /healthz, RTO 45m)", "HTTPS")
+Rel_D(cdn, lb_w, "Origin", "HTTPS")
+
+' Region West flow
+Rel_D(lb_w, web_w, "Ingress", "HTTP")
+Rel_D(web_w, core_w, "API", "REST")
+Rel_R(core_w, client_w, "Data", "gRPC")
+Rel_R(core_w, agg_w, "Products", "REST")
+Rel_R(core_w, settle_w, "Settlements", "gRPC")
+Rel_D(core_w, pg_primary, "R/W", "JDBC")
+Rel_D(core_w, cache_w, "Cache", "TCP")
+
+' Region East flow
+Rel_D(lb_e, web_e, "Ingress", "HTTP")
+Rel_D(web_e, core_e, "API", "REST")
+Rel_R(core_e, client_e, "Data", "gRPC")
+Rel_R(core_e, agg_e, "Products", "REST")
+Rel_R(core_e, settle_e, "Settlements", "gRPC")
+Rel_D(core_e, pg_replica, "Read", "JDBC")
+Rel_D(core_e, cache_e, "Cache", "TCP")
+
+' Cross-region and external
+Rel_L(pg_primary, pg_replica, "Async replication", "WAL")
+Rel_D(pg_primary, backups, "PITR", "S3")
+Rel_R(agg_w, insurers, "APIs", "REST")
+Rel_R(core_w, payments, "Pay", "HTTPS")
+
+
+
+HIDE_STEREOTYPE()
+@enduml
